@@ -31,9 +31,9 @@ require 'tempfile'
 require 'yaml'
 Thread.abort_on_exception = true
 
-GNUPG = "/usr/bin/gpg"
-GROUP_PATTERN = "@[a-zA-Z0-9-]+"
-USER_PATTERN = "[a-zA-Z0-9:-]+"
+GNUPG = "gpg"
+GROUP_PATTERN = "@[a-zA-Z0-9_-]+"
+USER_PATTERN = "[a-zA-Z0-9:_-]+"
 $program_name = File.basename($0, '.*')
 CONFIG_FILE = ENV['HOME']+ "/.pws.yaml"
 
@@ -219,7 +219,8 @@ class GnuPG
         parts = line.split(':')
         if (parts[0] == "pub")
           pub = parts[4]
-        elsif (parts[0] == "fpr")
+          fpr = nil
+        elsif (parts[0] == "fpr") and fpr.nil?
           fpr = parts[9]
           @@keyid_fpr_mapping[pub] = fpr
         elsif (parts[0] == "sub")
